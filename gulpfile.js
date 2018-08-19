@@ -18,7 +18,7 @@ gulp.task('serve', function() {
 });
 
 gulp.task('pug', function() {
-	return gulp.src('src/pug/*.pug')
+	return gulp.src('src/*.pug')
 	.pipe(pug({ pretty: true }))
 	.on('error', console.log)
 	.pipe(htmlmin({collapseWhitespace: true}))
@@ -26,14 +26,14 @@ gulp.task('pug', function() {
 });
 
 gulp.task('sass', function () {
-	return gulp.src('src/sass/*.sass')
+	return gulp.src('src/styles/*.sass')
 	.pipe(sass().on('error', sass.logError))
 	.pipe(autoprefixer({
 		browsers: ['last 10 versions'],
 		cascade: false
 	}))
 	.pipe(cleanCSS())
-	.pipe(gulp.dest('dist/css'))
+	.pipe(gulp.dest('dist/styles'))
 	.pipe(browserSync.stream());
 });
 
@@ -41,19 +41,19 @@ gulp.task('scripts-libs', function() {
 	return gulp.src('node_modules/jquery/dist/jquery.min.js')
 	.pipe(concat('libs.js'))
 	.pipe(uglify())
-	.pipe(gulp.dest('dist/js'));
+	.pipe(gulp.dest('dist/scripts'));
 });
 
 gulp.task('scripts', function() {
-	return gulp.src('src/js/*.js')
+	return gulp.src('src/scripts/*.js')
 	.pipe(uglify())
-	.pipe(gulp.dest('dist/js'));
+	.pipe(gulp.dest('dist/scripts'));
 });
 
-gulp.task('img', function() {
-	return gulp.src('src/img/*')
+gulp.task('images', function() {
+	return gulp.src('src/images/*')
 	.pipe(imagemin())
-	.pipe(gulp.dest('dist/img'));
+	.pipe(gulp.dest('dist/images'));
 });
 
 gulp.task('fonts', function() {
@@ -62,15 +62,15 @@ gulp.task('fonts', function() {
 });
 
 gulp.task('watch', function() {
-	gulp.watch('src/pug/*.pug', ['pug', browserSync.reload]);
-	gulp.watch('src/sass/*.sass', ['sass']);
-	gulp.watch('src/js/*.js', ['scripts', browserSync.reload]);
+	gulp.watch('src/*.pug', ['pug', browserSync.reload]);
+	gulp.watch('src/styles/*.sass', ['sass']);
+	gulp.watch('src/scripts/*.js', ['scripts', browserSync.reload]);
 });
 
 gulp.task('build', function() {
-	runSequence(['img', 'fonts'], ['pug', 'sass', 'scripts-libs', 'scripts']);
+	runSequence(['images', 'fonts'], ['pug', 'sass', 'scripts-libs', 'scripts']);
 });
 
 gulp.task('default', function() {
-	runSequence(['img', 'fonts'], ['pug', 'sass', 'scripts-libs', 'scripts'], 'serve', 'watch');
+	runSequence(['images', 'fonts'], ['pug', 'sass', 'scripts-libs', 'scripts'], 'serve', 'watch');
 });
